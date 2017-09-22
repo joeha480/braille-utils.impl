@@ -171,6 +171,25 @@ public class DotMapperTest {
 		assertEquals("100010", mapper.readLine(true));
 		assertEquals("001010", mapper.readLine(true));
 	}
+	//TODO: complete the test
+	@Test
+	public void testTrimTrailing() {
+		DotMapper mapper1 = new DotMapper(8, DotMapperConfiguration.builder()
+				.baseCharacter('@')
+				.cellHeight(4)
+				.cellWidth(1)
+				.map(new int[]{1,2,4,8})
+				.build());
+		assertEquals("When the width of the mapper is 1 then the trimmed string should be an even "
+				+ "number of characters.", "ABC@", mapper1.trimTrailing("ABC@@@"));
+		DotMapper mapper2 = new DotMapper(8, DotMapperConfiguration.builder()
+				.baseCharacter('@')
+				.cellHeight(4)
+				.cellWidth(2)
+				.map(new int[]{1,2,4,8})
+				.build());
+		assertEquals("When the width of the mapper is 2, each character is a braille cell.", "ABC", mapper2.trimTrailing("ABC@@@"));
+	}
 
 	@Test
 	public void testTrimTrailing() {
