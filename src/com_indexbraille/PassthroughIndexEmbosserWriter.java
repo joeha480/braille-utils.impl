@@ -86,6 +86,12 @@ public class PassthroughIndexEmbosserWriter implements ExtendedEmbosserWriter {
 			}
 			writer = new IndexTransparentEmbosserWriter(os, bc, header.getIndexHeader(true), footer, props);
 			writer.open(duplex);
+		} else {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("Using the advanced embosser.");
+			}
+			writer = new AdvancedIndexEmbosserWriter(os, bc, header.getIndexHeader(false), props);
+			((AdvancedIndexEmbosserWriter)writer).open(duplex, contract);
 		}
 	}
 
