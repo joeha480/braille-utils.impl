@@ -18,6 +18,7 @@
 package org.daisy.braille.utils.impl.tools.embosser;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import org.daisy.dotify.api.embosser.Embosser;
 import org.daisy.dotify.api.embosser.EmbosserFactoryProperties;
@@ -81,8 +82,17 @@ public abstract class AbstractEmbosser extends AbstractFactory implements Emboss
 	 * Gets the page format
 	 * @return returns the page format
 	 */
-	protected PageFormat getPageFormat() {
+	@Override
+	public PageFormat getPageFormat() {
 		return pageFormat;
+	}
+
+	@Override
+	public void setPageFormat(PageFormat pageFormat) {
+		if (!supportsPageFormat(pageFormat)) {
+			throw new IllegalArgumentException("Page format is not supported by the embosser: " + pageFormat);
+		}
+		this.pageFormat = pageFormat;
 	}
 
 	/**
@@ -186,6 +196,17 @@ public abstract class AbstractEmbosser extends AbstractFactory implements Emboss
 	@Override
 	public boolean supportsTable(Table table) {
 		return getTableFilter().accept(table);
+	}
+
+	@Override
+	public Table getTable() {
+		return setTable;
+	}
+
+	@Override
+	public void setTable(Table table) {
+		//TODO: the implementation accepts tables that are not supported
+		this.setTable = Objects.requireNonNull(table);
 	}
 
 	/* (non-Javadoc)
