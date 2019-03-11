@@ -26,11 +26,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import org.daisy.braille.impl.embosser.AbstractEmbosser;
+import org.daisy.braille.impl.embosser.AbstractEmbosserWriter.Padding;
+import org.daisy.braille.impl.embosser.ConfigurableEmbosser;
+import org.daisy.braille.impl.embosser.EmbosserConfiguration;
+import org.daisy.braille.impl.embosser.SimpleEmbosserProperties;
 import org.daisy.braille.utils.api.embosser.Device;
 import org.daisy.braille.utils.api.embosser.EmbosserFactoryException;
 import org.daisy.braille.utils.api.embosser.EmbosserFeatures;
 import org.daisy.braille.utils.api.embosser.EmbosserWriter;
-import org.daisy.braille.utils.api.embosser.EmbosserWriterProperties;
 import org.daisy.braille.utils.api.embosser.PrintPage;
 import org.daisy.braille.utils.api.embosser.PrintPage.PrintDirection;
 import org.daisy.braille.utils.api.embosser.StandardLineBreaks;
@@ -40,10 +44,6 @@ import org.daisy.braille.utils.api.paper.PageFormat;
 import org.daisy.braille.utils.api.paper.Paper;
 import org.daisy.braille.utils.api.table.TableCatalogService;
 import org.daisy.braille.utils.api.table.TableFilter;
-import org.daisy.braille.impl.embosser.AbstractEmbosser;
-import org.daisy.braille.impl.embosser.AbstractEmbosserWriter.Padding;
-import org.daisy.braille.impl.embosser.ConfigurableEmbosser;
-import org.daisy.braille.impl.embosser.SimpleEmbosserProperties;
 
 /**
  *
@@ -95,12 +95,13 @@ public class Interpoint55Embosser extends AbstractEmbosser {
 
 	public Interpoint55Embosser(TableCatalogService service, FactoryProperties props) {
 
-		super(service, props.getDisplayName(), props.getDescription(), props.getIdentifier());
+		super(service, props.getDisplayName(), props.getDescription(), props.getIdentifier(),
+				new EmbosserConfiguration.Builder()
+				.cellWidth(6d)
+				.cellHeight(eightDotsEnabled?12.5d:10d)
+				.build());
 
 		setTable = service.newTable(table_US1);
-
-		setCellWidth(6d);
-		setCellHeight(eightDotsEnabled?12.5d:10d);
 	}
 
 	@Override

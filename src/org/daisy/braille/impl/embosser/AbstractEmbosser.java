@@ -56,28 +56,15 @@ public abstract class AbstractEmbosser extends AbstractFactory implements Emboss
 	 * @param identifier an identifier
 	 */
 	public AbstractEmbosser(TableCatalogService service, String name, String desc, String identifier) {
+		this(service, name, desc, identifier, new EmbosserConfiguration.Builder().build());
+	}
+	public AbstractEmbosser(TableCatalogService service, String name, String desc, String identifier, EmbosserConfiguration conf) {
 		super(name, desc, identifier);
 		this.props = new HashMap<>();
 		this.settings = new HashMap<>();
 		this.tableCatalogService = service;
 		defaultTable = service.newTable(DefaultTableProvider.class.getCanonicalName() + ".TableType.EN_US");
 		setTable = defaultTable;
-	}
-
-	/**
-	 * Set cell width, in millimeters
-	 * @param val the width, in millimeters
-	 */
-	protected void setCellWidth(double val) {
-		cellWidth = val;
-	}
-
-	/**
-	 * Set cell height, in millimeters
-	 * @param val the height, in millimeters
-	 */
-	protected void setCellHeight(double val) {
-		cellHeight = val;
 	}
 
 	/**
