@@ -76,16 +76,8 @@ class Brf2PefTask extends ReadWriteTask {
 			options.add(new UserOption.Builder(TextHandler.KEY_LANGUAGE).displayName(Messages.LABEL_LANGUAGE.localize()).build());
 			UserOption.Builder mode = new UserOption.Builder(TextHandler.KEY_MODE)
 					.displayName(Messages.LABEL_TABLE.localize());
-			tableCatalog.list().stream()
-					.sorted((v1, v2)->v1.getDisplayName().compareTo(v2.getDisplayName()))
-					.forEach(v->
-					mode.addValue(
-							new UserOptionValue.Builder(v.getIdentifier())
-									.displayName(v.getDisplayName())
-									.description(v.getDescription())
-									.build()
-					)
-			);
+			TaskUtils.listAsUserOptionValues(tableCatalog)
+			.forEach(mode::addValue);
 			options.add(mode.build());
 			options.add(new UserOption.Builder(TextHandler.KEY_TITLE).displayName(Messages.LABEL_TITLE.localize()).build());
 		}

@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.daisy.dotify.api.embosser.EmbosserCatalog;
+import org.daisy.dotify.api.embosser.EmbosserCatalogService;
 import org.daisy.dotify.api.table.TableCatalog;
 import org.daisy.dotify.api.table.TableCatalogService;
 import org.daisy.streamline.api.tasks.TaskGroup;
@@ -22,6 +24,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 public class BrfInputManagerFactory implements TaskGroupFactory {
 	private final Set<TaskGroupInformation> information;
 	private TableCatalogService tableCatalog;
+	private EmbosserCatalogService embosserCatalog;
+	
 	/**
 	 * Creates a new text input manager factory.
 	 */
@@ -29,12 +33,14 @@ public class BrfInputManagerFactory implements TaskGroupFactory {
 
 		Set<TaskGroupInformation> tmp = new HashSet<>();
 		tmp.add(TaskGroupInformation.newConvertBuilder("brf", "pef").build());
+		tmp.add(TaskGroupInformation.newConvertBuilder("pef", "brf").build());
 		information = Collections.unmodifiableSet(tmp);
 	}
 	
 	@Override
 	public void setCreatedWithSPI() {
 		tableCatalog = TableCatalog.newInstance();
+		embosserCatalog = EmbosserCatalog.newInstance();
 	}
 	
 	/**
@@ -54,6 +60,23 @@ public class BrfInputManagerFactory implements TaskGroupFactory {
 		this.tableCatalog = null;
 	}
 	
+	/**
+	 * Sets a factory dependency.
+	 * @param service the dependency
+	 */
+	@Reference(cardinality=ReferenceCardinality.MANDATORY)
+	public void setEmbosserCatalog(EmbosserCatalogService service) {
+		this.embosserCatalog = service;
+	}
+	
+	/**
+	 * Removes a factory dependency.
+	 * @param service the dependency to remove
+	 */
+	public void unsetEmbosserCatalog(EmbosserCatalogService service) {
+		this.embosserCatalog = null;
+	}
+	
 	@Override
 	public boolean supportsSpecification(TaskGroupInformation spec) {
 		return listAll().contains(spec);
@@ -61,7 +84,7 @@ public class BrfInputManagerFactory implements TaskGroupFactory {
 
 	@Override
 	public TaskGroup newTaskGroup(TaskGroupSpecification spec) {
-		return new BrfInputManager(tableCatalog);
+		return new BrfInputManager(spec, tableCatalog, embosserCatalog);
 	}
 
 	@Override
